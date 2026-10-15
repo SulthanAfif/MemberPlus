@@ -1,0 +1,20 @@
+@extends('layouts.app')
+@section('title', $member->exists ? 'Edit Member' : 'Daftar Member')
+@section('content')
+<section class="mb-6"><p class="mb-2 text-xs font-bold uppercase tracking-[.18em] text-teal-700">Direktori member</p><h1 class="text-3xl font-bold tracking-tight text-slate-950">{{ $member->exists ? 'Edit data member' : 'Daftarkan member' }}</h1><p class="mt-2 text-sm text-slate-500">Lengkapi informasi pelanggan untuk program loyalitas.</p></section>
+<form method="POST" action="{{ $member->exists ? route('members.update', $member) : route('members.store') }}" class="max-w-2xl overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+    @csrf
+    @if($member->exists) @method('PUT') @endif
+    <div class="grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
+        <div class="sm:col-span-2"><label for="member-name" class="mb-1.5 block text-sm font-semibold text-slate-700">Nama <span class="text-rose-500">*</span></label><input id="member-name" name="name" value="{{ old('name', $member->name) }}" required autocomplete="name" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10"></div>
+        <div><label for="member-phone" class="mb-1.5 block text-sm font-semibold text-slate-700">WhatsApp</label><input id="member-phone" name="phone" value="{{ old('phone', $member->phone) }}" autocomplete="tel" inputmode="tel" placeholder="08xxxxxxxxxx" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10"></div>
+        <div><label for="member-email" class="mb-1.5 block text-sm font-semibold text-slate-700">Email</label><input id="member-email" type="email" name="email" value="{{ old('email', $member->email) }}" autocomplete="email" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10"></div>
+        <div><label for="member-tier" class="mb-1.5 block text-sm font-semibold text-slate-700">Tier</label><select id="member-tier" name="tier_id" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10"><option value="">Otomatis (Bronze)</option>@foreach($tiers as $tier)<option value="{{ $tier->id }}" @selected(old('tier_id', $member->tier_id) == $tier->id)>{{ $tier->name }} (×{{ $tier->point_multiplier }})</option>@endforeach</select></div>
+        @if($member->exists)
+            <div><label for="member-status" class="mb-1.5 block text-sm font-semibold text-slate-700">Status</label><select id="member-status" name="status" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10"><option value="active" @selected(old('status', $member->status?->value) === 'active')>Aktif</option><option value="inactive" @selected(old('status', $member->status?->value) === 'inactive')>Nonaktif</option><option value="suspended" @selected(old('status', $member->status?->value) === 'suspended')>Ditangguhkan</option></select></div>
+        @endif
+        <div class="sm:col-span-2"><label for="member-notes" class="mb-1.5 block text-sm font-semibold text-slate-700">Catatan</label><textarea id="member-notes" name="notes" rows="3" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10">{{ old('notes', $member->notes) }}</textarea></div>
+    </div>
+    <div class="flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/60 px-5 py-4 sm:flex-row sm:justify-end sm:px-6"><a href="{{ route('members.index') }}" class="rounded-xl px-4 py-2.5 text-center text-sm font-semibold text-slate-600 hover:bg-slate-100">Batal</a><button type="submit" class="rounded-xl bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-800">Simpan member</button></div>
+</form>
+@endsection

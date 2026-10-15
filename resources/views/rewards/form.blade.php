@@ -1,0 +1,18 @@
+@extends('layouts.app')
+@section('title', $reward->exists ? 'Edit Reward' : 'Tambah Reward')
+@section('content')
+<section class="mb-6"><p class="mb-2 text-xs font-bold uppercase tracking-[.18em] text-teal-700">Katalog reward</p><h1 class="text-3xl font-bold tracking-tight text-slate-950">{{ $reward->exists ? 'Edit reward' : 'Tambah reward' }}</h1><p class="mt-2 text-sm text-slate-500">Atur hadiah yang bisa ditukar menggunakan poin member.</p></section>
+<form method="POST" action="{{ $reward->exists ? route('rewards.update', $reward) : route('rewards.store') }}" class="max-w-2xl overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+    @csrf
+    @if($reward->exists) @method('PUT') @endif
+    <div class="grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
+        <div class="sm:col-span-2"><label for="reward-name" class="mb-1.5 block text-sm font-semibold text-slate-700">Nama reward <span class="text-rose-500">*</span></label><input id="reward-name" name="name" value="{{ old('name', $reward->name) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10"></div>
+        <div class="sm:col-span-2"><label for="reward-description" class="mb-1.5 block text-sm font-semibold text-slate-700">Deskripsi</label><textarea id="reward-description" name="description" rows="3" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10">{{ old('description', $reward->description) }}</textarea></div>
+        <div><label for="reward-cost" class="mb-1.5 block text-sm font-semibold text-slate-700">Biaya poin <span class="text-rose-500">*</span></label><input id="reward-cost" type="number" name="points_cost" value="{{ old('points_cost', $reward->points_cost ?? 50) }}" min="1" required inputmode="numeric" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10"></div>
+        <div><label for="reward-stock" class="mb-1.5 block text-sm font-semibold text-slate-700">Stok <span class="font-normal text-slate-400">(kosong = tanpa batas)</span></label><input id="reward-stock" type="number" name="stock" value="{{ old('stock', $reward->stock) }}" min="0" inputmode="numeric" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10"></div>
+        <div><label for="reward-order" class="mb-1.5 block text-sm font-semibold text-slate-700">Urutan tampilan</label><input id="reward-order" type="number" name="sort_order" value="{{ old('sort_order', $reward->sort_order ?? 0) }}" inputmode="numeric" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10"></div>
+        <label class="flex min-h-11 items-center gap-3 self-end rounded-xl border border-slate-200 px-3 py-2.5 text-sm font-medium text-slate-700"><input type="checkbox" name="is_active" value="1" @checked(old('is_active', $reward->is_active ?? true)) class="h-4 w-4 rounded border-slate-300 text-teal-700 focus:ring-teal-600">Reward aktif</label>
+    </div>
+    <div class="flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/60 px-5 py-4 sm:flex-row sm:justify-end sm:px-6"><a href="{{ route('rewards.index') }}" class="rounded-xl px-4 py-2.5 text-center text-sm font-semibold text-slate-600 hover:bg-slate-100">Batal</a><button type="submit" class="rounded-xl bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-800">Simpan reward</button></div>
+</form>
+@endsection
